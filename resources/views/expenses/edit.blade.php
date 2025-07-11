@@ -24,7 +24,8 @@
                         <div class="mb-3">
                             <label>Category</label>
                             <select name="category" class="form-select @error('category') is-invalid @enderror" required>
-                                @foreach(['Food', 'Transport', 'Bills', 'Health', 'Others'] as $cat)
+                                @foreach(['Food', 'Transport', 'Bills', 'Health', 'Shopping', 'Education', 'Travel', 'Entertainment', 'Recharge', 'Groceries', 'Rent', 'Utilities', 'Others']
+ as $cat)
                                     <option value="{{ $cat }}" {{ old('category', $expense->category) == $cat ? 'selected' : '' }}>{{ $cat }}
                                     </option>
                                 @endforeach

@@ -32,7 +32,8 @@
                         <div class="col-md-2">
                             <select name="category" class="form-select">
                                 <option value="">All Categories</option>
-                                @foreach(['Food', 'Transport', 'Bills', 'Health', 'Others'] as $cat)
+                                @foreach(['Food', 'Transport', 'Bills', 'Health', 'Shopping', 'Education', 'Travel', 'Entertainment', 'Recharge', 'Groceries', 'Rent', 'Utilities', 'Others']
+ as $cat)
                                     <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>{{ $cat }}
                                     </option>
                                 @endforeach

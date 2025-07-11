@@ -17,7 +17,8 @@ class ExpenseSeeder extends Seeder
             $user = User::factory()->create(); // create one if not found
         }
 
-        $categories = ['Food', 'Transport', 'Bills', 'Health', 'Others'];
+        $categories = ['Food', 'Transport', 'Bills', 'Health', 'Shopping', 'Education', 'Travel', 'Entertainment', 'Recharge', 'Groceries', 'Rent', 'Utilities', 'Others']
+;
 
         for ($i = 0; $i < 50; $i++) {
             Expense::create([
