@@ -44,8 +44,13 @@
                         <div class="col-md-2">
                             <a href="{{ route('expenses.index') }}" class="btn btn-primary w-100">Clear</a>
                         </div>
-                        <div class="col-md-2">
-                            <a href="{{ route('expenses.pdf', request()->query()) }}" class="btn btn-primary w-100">Pdf</a>
+                        <div class="col-md-1">
+                            <a href="{{ route('expenses.pdf', request()->query()) }}" class="btn btn-primary w-100">PDF</a>
+                        </div>
+
+                        <div class="col-md-1">
+                            <a href="{{ route('expenses.send', request()->query()) }}"
+                                class="btn btn-success w-100">Email</a>
                         </div>
                     </form>
 

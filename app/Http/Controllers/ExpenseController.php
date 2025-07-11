@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Expense;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use PDF;
+use App\Models\Expense;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use App\Mail\ExpenseReportMail;
+use Illuminate\Support\Facades\Mail;
 
 class ExpenseController extends Controller
 {
@@ -34,7 +37,7 @@ class ExpenseController extends Controller
         $totalAmount = (clone $query)->sum('amount');
 
         // Get filtered & paginated results
-        $expenses = $query->orderBy('date', 'desc')->paginate(3)->withQueryString();
+        $expenses = $query->orderBy('date', 'desc')->paginate(10)->withQueryString();
         // dd($expenses->toArray());
         return view('expenses.index', compact('expenses', 'totalAmount'));
     }
@@ -157,8 +160,52 @@ class ExpenseController extends Controller
 
         $pdf = PDF::loadView('expenses.pdf', compact('expenses', 'totalAmount', 'request'));
         $pdf->setOptions(['defaultFont' => 'DejaVu Sans']);
+        $pdfOutput = $pdf->output();
+        $fileName = 'expense_report_' . now()->format('Ymd_His') . '.pdf';
+        $path = "pdf/{$fileName}";
+        Storage::disk('public')->put($path, $pdfOutput);
+
         // return $pdf->download('expenses_report.pdf');
-        return $pdf->stream('expenses_report.pdf');
+        return $pdf->stream($fileName);
 
     }
+
+
+    public function sendPdfEmail(Request $request)
+    {
+        $query = Expense::where('user_id', auth()->id());
+
+        if ($request->filled('from')) {
+            $query->whereDate('date', '>=', $request->from);
+        }
+
+        if ($request->filled('to')) {
+            $query->whereDate('date', '<=', $request->to);
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        $expenses = $query->orderBy('date', 'desc')->get();
+        $totalAmount = $expenses->sum('amount');
+
+        $pdf = PDF::loadView('expenses.pdf', compact('expenses', 'totalAmount', 'request'));
+        $pdf->setOptions(['defaultFont' => 'DejaVu Sans']);
+        $pdfOutput = $pdf->output();
+        $fileName = 'expense_report_' . now()->format('Ymd_His') . '.pdf';
+        $path = "pdf/{$fileName}";
+        Storage::disk('public')->put($path, $pdfOutput);
+        // Get full path from public disk
+        $filePath = storage_path("app/public/{$path}");
+
+        // Send email with attachment
+        Mail::to(auth()->user()->email)->send(new ExpenseReportMail($filePath));
+        return redirect()->back()->with('success', 'Expense PDF sent to your email!');
+
+
+    }
+
+
+
 }

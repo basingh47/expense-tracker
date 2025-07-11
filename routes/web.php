@@ -19,11 +19,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth','verified'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/expenses/pdf', [ExpenseController::class, 'exportPdf'])->name('expenses.pdf');
+    Route::get('/expenses/send', [ExpenseController::class, 'sendPdfEmail'])->name('expenses.send');
     Route::resource('expenses', ExpenseController::class);
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
