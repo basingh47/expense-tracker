@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Expense;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use PDF;
 
 class ExpenseController extends Controller
 {
@@ -15,12 +16,12 @@ class ExpenseController extends Controller
     {
         $query = Expense::where('user_id', auth()->id()); // optional if multi-user
 
-        
+
         if ($request->filled('from')) {
             $query->whereDate('date', '>=', $request->from);
         }
 
-      
+
         if ($request->filled('to')) {
             $query->whereDate('date', '<=', $request->to);
         }
@@ -35,7 +36,7 @@ class ExpenseController extends Controller
         // Get filtered & paginated results
         $expenses = $query->orderBy('date', 'desc')->paginate(3)->withQueryString();
         // dd($expenses->toArray());
-        return view('expenses.index', compact('expenses','totalAmount'));
+        return view('expenses.index', compact('expenses', 'totalAmount'));
     }
 
     /**
@@ -130,4 +131,34 @@ class ExpenseController extends Controller
         return redirect()->route('expenses.index')->with('success', 'Expense deleted successfully!');
     }
 
+
+    /**
+     * Pdf Generate based on request
+     */
+
+    public function exportPdf(Request $request)
+    {
+        $query = Expense::where('user_id', auth()->id());
+
+        if ($request->filled('from')) {
+            $query->whereDate('date', '>=', $request->from);
+        }
+
+        if ($request->filled('to')) {
+            $query->whereDate('date', '<=', $request->to);
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        $expenses = $query->orderBy('date', 'desc')->get();
+        $totalAmount = $expenses->sum('amount');
+
+        $pdf = PDF::loadView('expenses.pdf', compact('expenses', 'totalAmount', 'request'));
+        $pdf->setOptions(['defaultFont' => 'DejaVu Sans']);
+        // return $pdf->download('expenses_report.pdf');
+        return $pdf->stream('expenses_report.pdf');
+
+    }
 }

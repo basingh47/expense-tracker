@@ -3,7 +3,17 @@
 @section('content')
     <div class="container mt-4">
 
-
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{ session('success') }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @elseif (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{ session('error') }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <div class="card">
             <h5 class="card-header">Expense List</h5>
 
@@ -35,7 +45,7 @@
                             <a href="{{ route('expenses.index') }}" class="btn btn-primary w-100">Clear</a>
                         </div>
                         <div class="col-md-2">
-                            <a href="#" class="btn btn-primary w-100">Pdf</a>
+                            <a href="{{ route('expenses.pdf', request()->query()) }}" class="btn btn-primary w-100">Pdf</a>
                         </div>
                     </form>
 
