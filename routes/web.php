@@ -12,6 +12,11 @@ Route::get('/fix-config', function () {
     return '✅ Laravel config cleared and cached again';
 });
 
+Route::get('/migrate-now', function () {
+    Artisan::call('migrate', ['--force' => true]);
+    return '✅ Migrations done!';
+});
+
 
 // Route::get('/', function () {
 //     return view('welcome');
