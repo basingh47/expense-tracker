@@ -4,6 +4,19 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/fix-app', function () {
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+    Artisan::call('key:generate');
+    Artisan::call('migrate', ["--force" => true]);
+    Artisan::call('config:cache');
+
+    return '✔️ App fixed successfully!';
+});
+
 
 // Route::get('/', function () {
 //     return view('welcome');
