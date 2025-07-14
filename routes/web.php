@@ -4,33 +4,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\DashboardController;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
-
-Route::get('/fix-db', function () {
-    // Disable session for this route (temporary solution)
-    config(['session.driver' => 'array']);
-
-    Artisan::call('migrate', ['--force' => true]);
-
-    return '✅ Migrations finished';
-});
-
-Route::get('/check-db', function () {
-    return DB::connection()->getPDO()->getAttribute(PDO::ATTR_DRIVER_NAME);
-});
-
-Route::get('/tables', function () {
-    return DB::select('SELECT tablename FROM pg_tables WHERE schemaname = ?', ['public']);
-});
-
-
-
-
-Route::get('/migrate-now', function () {
-    Artisan::call('migrate', ['--force' => true]);
-    return 'Migrations done!';
-});
 
 // Route::get('/', function () {
 //     return view('welcome');
