@@ -7,6 +7,15 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
+Route::get('/fix-db', function () {
+    // Disable session for this route (temporary solution)
+    config(['session.driver' => 'array']);
+
+    Artisan::call('migrate', ['--force' => true]);
+
+    return '✅ Migrations finished';
+});
+
 Route::get('/check-db', function () {
     return DB::connection()->getPDO()->getAttribute(PDO::ATTR_DRIVER_NAME);
 });
