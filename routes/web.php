@@ -5,17 +5,24 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 Route::get('/fix-app', function () {
-    Artisan::call('config:clear');
-    Artisan::call('route:clear');
-    Artisan::call('view:clear');
-    Artisan::call('key:generate');
-    Artisan::call('migrate', ["--force" => true]);
-    Artisan::call('config:cache');
+    try {
+        Artisan::call('config:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
+        Artisan::call('key:generate');
+        Artisan::call('migrate', ["--force" => true]);
+        Artisan::call('config:cache');
 
-    return '✔️ App fixed successfully!';
+        return '✔️ App fixed successfully!';
+    } catch (\Throwable $e) {
+        Log::error($e);
+        return '❌ Error: ' . $e->getMessage();
+    }
 });
+
 
 
 // Route::get('/', function () {
