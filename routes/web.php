@@ -5,6 +5,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+
+Route::get('/check-db', function () {
+    return DB::connection()->getPDO()->getAttribute(PDO::ATTR_DRIVER_NAME);
+});
+
+Route::get('/tables', function () {
+    return DB::select('SELECT tablename FROM pg_tables WHERE schemaname = ?', ['public']);
+});
+
+
 
 
 Route::get('/migrate-now', function () {
