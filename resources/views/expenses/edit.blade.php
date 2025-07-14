@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@php
+    $today = \Carbon\Carbon::now()->format('Y-m-d');
+@endphp
 @section('content')
     <div class="container mt-4">
         <div class="card">
@@ -12,7 +14,7 @@
 
                         <div class="mb-3">
                             <label>Date</label>
-                            <input type="date" name="date" class="form-control @error('date') is-invalid @enderror" value="{{ old('date', $expense->date) }}"
+                            <input type="date" name="date" class="form-control @error('date') is-invalid @enderror" max="{{ $today }}" value="{{ old('date', $expense->date) }}"
                                 required>
                             @error('date')
                                 <div class="invalid-feedback">

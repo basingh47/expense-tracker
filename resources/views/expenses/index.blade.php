@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@php
+    $today = \Carbon\Carbon::now()->format('Y-m-d');
+@endphp
 @section('content')
     <div class="container mt-4">
 
@@ -22,11 +24,11 @@
                     <form method="GET" class="row g-3 mb-4">
                         @csrf
                         <div class="col-md-2">
-                            <input type="date" name="from" class="form-control" value="{{ request('from') }}"
+                            <input type="date" name="from" class="form-control" max="{{ $today }}" value="{{ request('from') }}"
                                 placeholder="From Date">
                         </div>
                         <div class="col-md-2">
-                            <input type="date" name="to" class="form-control" value="{{ request('to') }}"
+                            <input type="date" name="to" max="{{ $today }}" class="form-control" value="{{ request('to') }}"
                                 placeholder="To Date">
                         </div>
                         <div class="col-md-2">
