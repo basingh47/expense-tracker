@@ -6,17 +6,11 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Artisan;
 
-Route::get('/fix-config', function () {
-    Artisan::call('config:clear');
-    Artisan::call('config:cache');
-    return '✅ Laravel config cleared and cached again';
-});
 
 Route::get('/migrate-now', function () {
     Artisan::call('migrate', ['--force' => true]);
-    return '✅ Migrations done!';
+    return 'Migrations done!';
 });
-
 
 // Route::get('/', function () {
 //     return view('welcome');
