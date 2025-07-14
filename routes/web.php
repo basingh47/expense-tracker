@@ -7,6 +7,11 @@ use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
+Route::get('/generate-key', function () {
+    Artisan::call('key:generate');
+    return '✅ Key generated: ' . env('APP_KEY');
+});
+
 Route::get('/fix-app', function () {
     try {
         Artisan::call('config:clear');
